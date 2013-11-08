@@ -39,8 +39,8 @@ def allele_balance_plot(ax, genotype, AD, coverage=None, colors='bgr', **kwargs)
     # make pretty
     for s in 'top', 'right', 'bottom', 'left':
         ax.spines[s].set_visible(False)
-    ax.set_xlabel('allele depth (ref)')
-    ax.set_ylabel('allele depth (alt)')
+    ax.set_xlabel('ref allele depth')
+    ax.set_ylabel('alt allele depth')
     ax.grid(axis='both')
     return ax
 
@@ -103,8 +103,8 @@ def het_allele_balance_hexbin(ax, genotype, AD, coverage=None, **kwargs):
     ax.set_xlim(0, coverage)
     ax.set_ylim(0, coverage)
     # make pretty
-    ax.set_xlabel('allele depth (ref)')
-    ax.set_ylabel('allele depth (alt)')
+    ax.set_xlabel('ref allele depth')
+    ax.set_ylabel('alt allele depth')
 
 
 
