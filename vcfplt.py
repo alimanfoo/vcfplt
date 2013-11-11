@@ -1,4 +1,5 @@
 __author__ = 'alimanfoo@googlemail.com'
+__version__ = '0.1'
 
 
 import numpy as np
