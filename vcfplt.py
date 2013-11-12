@@ -1,5 +1,5 @@
 __author__ = 'alimanfoo@googlemail.com'
-__version__ = '0.3'
+__version__ = '0.4'
 
 
 import numpy as np
@@ -113,7 +113,8 @@ def genotype_density_plot(ax, POS, genotype, g, window_size=10000, **kwargs):
     pltargs = {
         'alpha': .3,
         'marker': '.',
-        'color': 'm'
+        'color': 'm',
+        'linestyle': ' ',
     }
     pltargs.update(kwargs)
     # recode genotype array to 0 (hom ref) 1 (het) 2 (hom alt)
@@ -137,6 +138,6 @@ def genotype_density_plot(ax, POS, genotype, g, window_size=10000, **kwargs):
     ax.grid(axis='y')
     ax.xaxis.tick_bottom()
     ax.set_xlabel('position')
-    ax.set_ylabel('density (1/bp)')
+    ax.set_ylabel('density')
 
 
