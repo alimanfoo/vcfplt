@@ -108,4 +108,35 @@ def het_allele_balance_hexbin(ax, genotype, AD, coverage=None, **kwargs):
     ax.set_ylabel('alt allele depth')
 
 
+def genotype_density_plot(ax, POS, genotype, g, window_size=10000, **kwargs):
+    # set plotting defaults
+    pltargs = {
+        'alpha': .3,
+        'marker': '.',
+        'color': 'm'
+    }
+    pltargs.update(kwargs)
+    # recode genotype array to 0 (hom ref) 1 (het) 2 (hom alt)
+    # N.B., assumes biallelic variants
+    GT = np.sum(genotype, axis=1)  # recode genotypes
+    # take only genotype calls matching selected genotype
+    indices = np.nonzero(GT == g)[0]
+    POSg = np.take(POS, indices, axis=0)
+    # make a histogram of positions
+    bins = np.arange(0, np.max(POS), window_size)
+    pos_hist, _ = np.histogram(POSg, bins=bins)
+    # define X and Y variables
+    X = (bins[:-1] + window_size/2)
+    Y = pos_hist*1./window_size
+    # plot
+    ax.plot(X, Y, **pltargs)
+    # make pretty
+    ax.spines['top'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(axis='y')
+    ax.xaxis.tick_bottom()
+    ax.set_xlabel('position')
+    ax.set_ylabel('density (1/bp)')
+
 
