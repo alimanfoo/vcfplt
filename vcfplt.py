@@ -43,7 +43,7 @@ def allele_balance_plot(G, AD, coverage=None, colors='bgrcmyk', legend=True, ax=
 
     # define coverage limit
     if coverage is None:
-        coverage = np.max(AD)
+        coverage = np.percentile(AD, 98)
 
     # set plotting defaults
     pltargs = {
@@ -193,7 +193,7 @@ def allele_balance_hexbin(G, AD, g=1, coverage=None, ax=None, **kwargs):
 
     # define coverage limit
     if coverage is None:
-        coverage = np.max(AD)
+        coverage = np.percentile(AD, 98)
 
     # set plotting defaults
     pltargs = {
@@ -223,7 +223,7 @@ def allele_balance_hexbin(G, AD, g=1, coverage=None, ax=None, **kwargs):
     return ax
 
 
-def variant_density_plot(POS, window_size=10000, ax=None, **kwargs):
+def variant_density_plot(POS, window_size=10000, lim=None, ax=None, **kwargs):
     """
     Plot density (per bp) of variants.
 
@@ -234,6 +234,8 @@ def variant_density_plot(POS, window_size=10000, ax=None, **kwargs):
         1-dimensional array of genome positions of variants
     window_size: int
         Window size to calculate density within
+    lim: pair of ints
+        Genome region to plot
     ax: axes
         Axes on which to draw
 
@@ -274,11 +276,13 @@ def variant_density_plot(POS, window_size=10000, ax=None, **kwargs):
     ax.xaxis.tick_bottom()
     ax.set_xlabel('position')
     ax.set_ylabel('density')
+    if lim is not None:
+        ax.set_xlim(*lim)
 
     return ax
 
 
-def genotype_density_plot(POS, G, g=1, window_size=10000, ax=None, **kwargs):
+def genotype_density_plot(POS, G, g=1, window_size=10000, lim=None, ax=None, **kwargs):
     """
     Plot density (per bp) of calls of given genotype.
 
@@ -293,6 +297,8 @@ def genotype_density_plot(POS, G, g=1, window_size=10000, ax=None, **kwargs):
         Genotype to plot density of (defaults to 1 = het)
     window_size: int
         Window size to calculate density within
+    lim: pair of ints
+        Genome region to plot
     ax: axes
         Axes on which to draw
 
@@ -304,10 +310,10 @@ def genotype_density_plot(POS, G, g=1, window_size=10000, ax=None, **kwargs):
     indices = np.nonzero(G == g)[0]
     POSg = np.take(POS, indices, axis=0)
 
-    return variant_density_plot(POSg, window_size=window_size, ax=ax, **kwargs)
+    return variant_density_plot(POSg, window_size=window_size, lim=lim, ax=ax, **kwargs)
 
 
-def variant_density_fill(POS, window_size=10000, ax=None, **kwargs):
+def variant_density_fill(POS, window_size=10000, lim=None, ax=None, **kwargs):
     """
     Plot density (per bp) of variants as a filled area.
 
@@ -357,11 +363,13 @@ def variant_density_fill(POS, window_size=10000, ax=None, **kwargs):
     ax.xaxis.tick_bottom()
     ax.set_xlabel('position')
     ax.set_ylabel('density')
+    if lim is not None:
+        ax.set_xlim(*lim)
 
     return ax
 
 
-def genotype_density_fill(POS, G, g=1, window_size=10000, ax=None, **kwargs):
+def genotype_density_fill(POS, G, g=1, window_size=10000, lim=None, ax=None, **kwargs):
     """
     Plot density (per bp) of calls of given genotype as a filled area.
 
@@ -376,6 +384,8 @@ def genotype_density_fill(POS, G, g=1, window_size=10000, ax=None, **kwargs):
         Genotype to plot density of (defaults to 1 = het)
     window_size: int
         Window size to calculate density within
+    lim: pair of ints
+        Genome region to plot
     ax: axes
         Axes on which to draw
 
@@ -387,7 +397,7 @@ def genotype_density_fill(POS, G, g=1, window_size=10000, ax=None, **kwargs):
     indices = np.nonzero(G == g)[0]
     POSg = np.take(POS, indices, axis=0)
 
-    return variant_density_fill(POSg, window_size=window_size, ax=ax, **kwargs)
+    return variant_density_fill(POSg, window_size=window_size, lim=lim, ax=ax, **kwargs)
 
 
 from scipy.spatial.distance import pdist, squareform
@@ -627,3 +637,46 @@ def continuous_calldata_colormesh(X, labels=None, ax=None, **kwargs):
     return ax
 
 
+def genome_locator(POS, step=100, lim=None, ax=None, **kwargs):
+    """
+    Map variant index to genome position.
+
+    Parameters
+    ---------
+
+    POS: array
+        1-dmensional array of genome positions of variants
+    step: int
+        How often to draw a line
+    lim: pair of ints
+        Lower and upper bounds on genome position
+    ax: axes
+        Axes on which to draw
+
+    Remaining keyword arguments are passed to Line2D.
+
+    """
+
+    # set up axes
+    if ax is None:
+        fig = plt.figure(figsize=(7, 1))
+        ax = fig.add_subplot(111)
+
+    if lim is None:
+        lim = 0, np.max(POS)
+    start, stop = lim
+
+    for i, pos in enumerate(POS[::step]):
+        xfrom = pos
+        xto = (i * step * 1. / POS.size) * (stop-start)
+        l = plt.Line2D([xfrom, xto], [0, 1], **kwargs)
+        ax.add_line(l)
+
+    ax.set_xlim(start, stop)
+    ax.set_xlabel('position')
+    ax.set_yticks([])
+    ax.xaxis.tick_bottom()
+    for l in 'left', 'right':
+        ax.spines[l].set_visible(False)
+
+    return ax
