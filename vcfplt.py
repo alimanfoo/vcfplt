@@ -1,5 +1,5 @@
 __author__ = 'alimanfoo@googlemail.com'
-__version__ = '0.5'
+__version__ = '0.6'
 
 
 from itertools import cycle
@@ -548,7 +548,7 @@ def calldata_by_sample_boxplot(X, labels=None, lim=None, ax=None, **kwargs):
 from matplotlib.colors import ListedColormap
 
 
-def discrete_calldata_colormesh(X, labels=None, colors='wbgrcmyk', ax=None, **kwargs):
+def discrete_calldata_colormesh(X, labels=None, colors='wbgrcmyk', states=None, ax=None, **kwargs):
     """
     Make a meshgrid from discrete calldata (e.g., genotypes).
 
@@ -561,6 +561,8 @@ def discrete_calldata_colormesh(X, labels=None, colors='wbgrcmyk', ax=None, **kw
         Axis labels (e.g., sample IDs)
     colors: sequence
         Colors to use for different values of the array
+    states: sequence
+        Manually specify discrete calldata states (if not given will be determined from the data)
     ax: axes
         Axes on which to draw
 
@@ -574,7 +576,8 @@ def discrete_calldata_colormesh(X, labels=None, colors='wbgrcmyk', ax=None, **kw
         ax = fig.add_subplot(111)
 
     # determine discrete states
-    states = np.unique(X)
+    if states is None:
+        states = np.unique(X)
     colors = colors[:max(states)-min(states)+1]  # only need as many colors as states
 
     # plotting defaults
