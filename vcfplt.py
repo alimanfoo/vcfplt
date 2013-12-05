@@ -1,5 +1,5 @@
 __author__ = 'alimanfoo@googlemail.com'
-__version__ = '0.6'
+__version__ = '0.7-SNAPSHOT'
 
 
 from itertools import cycle
