@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sed -i -e 's/-SNAPSHOT//' vcfplt.py 
 version=`grep __version__ vcfplt.py | sed -e "s/__version__[ ]=[ ]'\(.*\)'/\1/"`
 echo $version
 # git commit and push
