@@ -668,14 +668,14 @@ def genome_locator(POS, step=100, lim=None, ax=None, **kwargs):
     if lim is None:
         lim = 0, np.max(POS)
     start, stop = lim
+    ax.set_xlim(start, stop)
 
     for i, pos in enumerate(POS[::step]):
         xfrom = pos
-        xto = (i * step * 1. / POS.size) * (stop-start)
+        xto = start + ((i * step * 1. / POS.size) * (stop-start))
         l = plt.Line2D([xfrom, xto], [0, 1], **kwargs)
         ax.add_line(l)
 
-    ax.set_xlim(start, stop)
     ax.set_xlabel('position')
     ax.set_yticks([])
     ax.xaxis.tick_bottom()
