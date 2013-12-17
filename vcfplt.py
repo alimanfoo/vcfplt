@@ -593,7 +593,7 @@ def discrete_calldata_colormesh(X, labels=None, colors='wbgrcmyk', states=None, 
 
     ax.set_yticks(np.arange(X.shape[1]) + .5)
     if labels is not None:
-        labels = ['%s [%s] ' % (s, i) for (i, s) in enumerate(labels)]
+#        labels = ['%s [%s] ' % (s, i) for (i, s) in enumerate(labels)]
         ax.set_yticklabels(labels, rotation=0)
 
     return ax
@@ -634,7 +634,7 @@ def continuous_calldata_colormesh(X, labels=None, ax=None, **kwargs):
 
     ax.set_yticks(np.arange(X.shape[1]) + .5)
     if labels is not None:
-        labels = ['%s [%s] ' % (s, i) for (i, s) in enumerate(labels)]
+ #       labels = ['%s [%s] ' % (s, i) for (i, s) in enumerate(labels)]
         ax.set_yticklabels(labels, rotation=0)
 
     return ax
@@ -683,3 +683,5 @@ def genome_locator(POS, step=100, lim=None, ax=None, **kwargs):
         ax.spines[l].set_visible(False)
 
     return ax
+
+
